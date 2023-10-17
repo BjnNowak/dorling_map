@@ -274,7 +274,7 @@ for (i in 2:dim(dorl2)[1]){
 }
 
 # Make map
-ggplot()+
+mp <- ggplot()+
   # World basemap
   geom_sf(
     world,mapping=aes(geometry=geometry),
@@ -298,6 +298,36 @@ ggplot()+
     fill=col_grass,color=NA
   )+ 
   theme_custom
+
+mp
+
+```
+
+## 4. Add labels
+
+7As reading a dorling cartogram can be difficult (the position of countries not being strictly respected), it's a good idea to finish off by adding labels for the names of the main countries.
+
+This can be done as follows:
+
+
+```{r, warning=FALSE, message=FALSE}
+# Extract Top5 countries for total agricultural area
+lab <- dorl2 %>%
+  arrange(-total)%>%
+  head(5)
+
+# Add labels to previous map
+mp_with_labs <- mp+
+  geom_text(
+    data=lab,
+    aes(x=X,y=Y,label=name,size=total),
+    color="white"
+  )+
+  scale_size(range=c(2,4))+
+  guides(size='none')
+
+mp_with_labs
+
 ```
 
 Now feel free to adapt this tutorial to your project! For example, it is also possible to represent more than two sub-variables per circle, by modifying the start and end arguments of the circleFun() function.
